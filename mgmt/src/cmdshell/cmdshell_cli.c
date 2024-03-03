@@ -108,7 +108,7 @@ ret_val_t cmdshell_cli_error_display(int ret)
     return 0;
 }
 
-ret_val_t cmdshell_show_hostname_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LEN])
+ret_val_t cmdshell_cli_show_hostname_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LEN])
 {
 	char *hostname;
 
@@ -117,7 +117,7 @@ ret_val_t cmdshell_show_hostname_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LE
 	return RET_ERR_NONE;
 }
 
-ret_val_t cmdshell_show_hostname_define()
+ret_val_t cmdshell_cli_show_hostname_define()
 {
 	int tokencnt = 3;
 
@@ -139,16 +139,16 @@ ret_val_t cmdshell_show_hostname_define()
 		}
 	};
 
-	return cmdmgmt_cli_register(token, tokencnt, cmdshell_show_hostname_cb, STATUS_TRUE, MODULE_CMDSHELL);
+	return cmdmgmt_cli_register(token, tokencnt, cmdshell_cli_show_hostname_cb, STATUS_TRUE, MODULE_CMDSHELL);
 }
 
-ret_val_t cmdshell_set_hostname_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LEN])
+ret_val_t cmdshell_cli_set_hostname_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LEN])
 {
 	cfg_hostname_set(argv[argc-1]);
 	return RET_ERR_NONE;
 }
 
-ret_val_t cmdshell_set_hostname_define()
+ret_val_t cmdshell_cli_set_hostname_define()
 {
 	int tokencnt = 4;
 
@@ -175,15 +175,15 @@ ret_val_t cmdshell_set_hostname_define()
 		}
 	};
 
-	return cmdmgmt_cli_register(token, tokencnt, cmdshell_set_hostname_cb, STATUS_TRUE, MODULE_CMDSHELL);
+	return cmdmgmt_cli_register(token, tokencnt, cmdshell_cli_set_hostname_cb, STATUS_TRUE, MODULE_CMDSHELL);
 }
 
-ret_val_t cmdshell_show_running_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LEN])
+ret_val_t cmdshell_cli_show_running_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LEN])
 {
     return cmdmgmt_cli_running_show();
 }
 
-ret_val_t cmdshell_show_running_define()
+ret_val_t cmdshell_cli_show_running_define()
 {
     int tokencnt = 3;
 
@@ -205,7 +205,7 @@ ret_val_t cmdshell_show_running_define()
         }
     };
 
-    return cmdmgmt_cli_register(token, tokencnt, cmdshell_show_running_cb, STATUS_TRUE, MODULE_CMDSHELL);
+    return cmdmgmt_cli_register(token, tokencnt, cmdshell_cli_show_running_cb, STATUS_TRUE, MODULE_CMDSHELL);
 }
 
 ret_val_t cmdshell_cli_builder(char **cli, int count)
@@ -226,13 +226,13 @@ ret_val_t cmdshell_cli_init()
 
 	cmdmgmt_cli_builder_register(MODULE_CMDSHELL, cmdshell_cli_builder);
 
-	if (RET_ERR_NONE != (ret = cmdshell_show_hostname_define()))
+	if (RET_ERR_NONE != (ret = cmdshell_cli_show_hostname_define()))
 		return ret;
 
-	if (RET_ERR_NONE != (ret = cmdshell_set_hostname_define()))
+	if (RET_ERR_NONE != (ret = cmdshell_cli_set_hostname_define()))
 		return ret;
 
-	if (RET_ERR_NONE != (ret = cmdshell_show_running_define()))
+	if (RET_ERR_NONE != (ret = cmdshell_cli_show_running_define()))
 		return ret;
 
 	return RET_ERR_NONE;

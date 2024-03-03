@@ -29,6 +29,19 @@ ret_val_t cmdmgmt_cli_builder_init()
 	return RET_ERR_NONE;
 }
 
+ret_val_t cmdmgmt_init()
+{
+	ret_val_t ret = RET_ERR_NONE;
+
+	if (RET_ERR_NONE != (ret = cmdmgmt_cli_init()))
+		return ret;
+
+	if (RET_ERR_NONE != (ret = cmdmgmt_cli_builder_init()))
+		return ret;
+
+	return ret;
+}
+
 ret_val_t cmdmgmt_cli_register(struct token tokenlist[], int tokencnt, ret_val_t (*func)(int, char (*)[CMDSHELL_MAX_TOKEN_LEN]), status_type_t status, module_type_t module)
 {
 	int i;
@@ -129,10 +142,12 @@ ret_val_t cmdmgmt_cli_execute(int tokencnt, char (*token)[CMDSHELL_MAX_TOKEN_LEN
 ret_val_t cmdmgmt_cli_running_show()
 {
 	char **cli;
+	
 	if (NULL != cmdbuilders.list[MODULE_CMDSHELL].func)
-	{
 		cmdbuilders.list[MODULE_CMDSHELL].func(cli,1);
-	}
+	
+	if (NULL != cmdbuilders.list[MODULE_INTERN]. func)
+		cmdbuilders.list[MODULE_INTERN].func(cli,1);
 
 	return RET_ERR_NONE;
 }

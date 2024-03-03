@@ -21,8 +21,9 @@ typedef struct options
 	char *desc;
 } options_t;
 
-void cfg_helper_show();
+void cfg_helper_show(void);
 void cfg_hostname_set(const char *name);
-const char *cfg_hostname_get();
+const char *cfg_hostname_get(void);
+int cfg_hostname_length_get(void);
 
 #endif /* __CFG_HELPER_H */

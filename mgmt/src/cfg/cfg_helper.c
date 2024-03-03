@@ -68,6 +68,11 @@ const char *cfg_hostname_get()
 	return hostname;
 }
 
+int cfg_hostname_length_get()
+{
+	return strlen(hostname);
+}
+
 void cfg_helper_show()
 {
 	usage_print();

@@ -3,10 +3,10 @@
 
 #include "lib.h"
 
-#define CMDSHELL_MAX_TOKEN      15
+#define CMDSHELL_MAX_TOKEN      20
 #define CMDSHELL_MAX_TOKEN_LEN  50
 #define CMDSHELL_MAX_HELP_LEN   100
-#define CMDSHELL_CMD_MAX_LEN    1000
+#define CMDSHELL_CMD_MAX_LEN    CMDSHELL_MAX_TOKEN*CMDSHELL_MAX_TOKEN_LEN
 
 typedef enum _module_type 
 {

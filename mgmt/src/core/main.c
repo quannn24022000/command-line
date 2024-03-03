@@ -39,13 +39,14 @@ int main (int argc, char **argv)
 		printf("Just for testing function\n");
 	}
 	else if (!strcasecmp(argv[1], "run"))
-	{	
-		cmdmgmt_cli_init();	
+	{
+		cmdmgmt_init();
+		intern_init();
+
 		cmdshell_cli_init();
-		intern_cli_init();
 
 
-		cmdshell_banner_show();
+		//cmdshell_banner_show();
 		cmdshell_input_start();
 
 		/*printf("%d %s %s %d\n %s %s %d \n%s %s %d\n", cmds.list[0].tokencnt, cmds.list[0].tokenlist[0].token, cmds.list[0].tokenlist[0].help, cmds.list[0].tokenlist[0].type, cmds.list[0].tokenlist[1].token, cmds.list[0].tokenlist[1].help, cmds.list[0].tokenlist[1].type, cmds.list[0].tokenlist[2].token, cmds.list[0].tokenlist[2].help, cmds.list[0].tokenlist[2].type);*/
