@@ -7,6 +7,14 @@
 #define CMDSHELL_MAX_TOKEN_LEN  50
 #define CMDSHELL_MAX_HELP_LEN   100
 #define CMDSHELL_CMD_MAX_LEN    CMDSHELL_MAX_TOKEN*CMDSHELL_MAX_TOKEN_LEN
+#define FIRST_SENTINAL 0
+#define SECOND_SENTINAL "Unkown"
+
+typedef struct _module_name_map
+{
+	int module;
+	char *name;
+} module_name_map_t;
 
 typedef enum _module_type 
 {
@@ -54,7 +62,7 @@ struct cli
 
 struct cli_builder
 {
-	ret_val_t (*func)(char **cli, int count);
+	ret_val_t (*func)(char **cli, int *count);
 };
 
 #endif /*__LIB_CLI_H*/

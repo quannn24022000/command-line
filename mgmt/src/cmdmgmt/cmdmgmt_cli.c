@@ -9,6 +9,16 @@
 struct cmdmgmt cmds;
 struct cmdmgmt_builder cmdbuilders;
 
+/* module name should have the same length --> align name of module*/
+module_name_map_t module_name_map[] = {
+    {MODULE_CMDSHELL, "MODULE CMDSHELL"},
+    {MODULE_ITMGMT,   " MODULE ITMGMT "},
+    {MODULE_CFG,      "  MODULE CFG   "},
+    {MODULE_INTERN,   " MODULE INTERN "},
+    {MODULE_TOPIC,    " MODULE_TOPIC  "},
+    {FIRST_SENTINAL, SECOND_SENTINAL}
+};
+
 ret_val_t cmdmgmt_cli_init()
 {
 	int i;
@@ -67,7 +77,7 @@ ret_val_t cmdmgmt_cli_register(struct token tokenlist[], int tokencnt, ret_val_t
 	return RET_ERR_NONE;
 }
 
-ret_val_t cmdmgmt_cli_builder_register(module_type_t module, ret_val_t (*func)(char**, int))
+ret_val_t cmdmgmt_cli_builder_register(module_type_t module, ret_val_t (*func)(char**, int*))
 {
 	cmdbuilders.list[module].func = func;
 	return RET_ERR_NONE;
@@ -139,15 +149,69 @@ ret_val_t cmdmgmt_cli_execute(int tokencnt, char (*token)[CMDSHELL_MAX_TOKEN_LEN
 	return RET_ERR_NONE;
 }
 
+void cmdmgmt_cli_module_running_show(int module, char **cli, int *count)
+{
+	int i, idx, size;
+
+	size = sizeof(module_name_map)/sizeof(module_name_map_t);
+
+	for (i = 0; i < size; i++) 
+	{
+		if (module_name_map[i].module == module)
+		{
+			idx = i;
+			break;
+		}
+	}
+	for (i = 0; i < 50; i++)
+		printf("-");
+	printf("%s", module_name_map[idx].name);
+	for (i = 0; i < 50; i++)
+		printf("-");
+	printf("\n");
+
+	if (NULL !=  cmdbuilders.list[module].func)
+		cmdbuilders.list[module].func(cli, count);
+	
+	printf("\n\n");
+}
+
 ret_val_t cmdmgmt_cli_running_show()
 {
-	char **cli;
+	ret_val_t ret;
+
+	char **cli = NULL;
+	int i, idx, size;
+	int count = 0;
+
+	if (NULL == (cli = (char**) malloc (CMDMGMT_CLI_LIST_MAX * sizeof(char*))))
+		return RET_ERR_NO_MEM;
+
+	for (i = 0; i < CMDMGMT_CLI_LIST_MAX; i++)
+	{
+		if (NULL == (cli[i] = (char*) malloc (CMDSHELL_MAX_TOKEN_LEN * sizeof(char))))
+			goto __mem_free;
+	}
+
+	cmdmgmt_cli_module_running_show(MODULE_CMDSHELL, cli, &count);
+	cmdmgmt_cli_module_running_show(MODULE_INTERN, cli, &count);
+
+	printf("\nTOTAL COMMAND = %d, ALL SYSTEM COMMANDS:\n\n", count);
+	for (i = 0; i < count; i++)
+	{
+		if (cli && cli[i])
+			printf("%-4d%s\n", i+1, cli[i]);
+	}
 	
-	if (NULL != cmdbuilders.list[MODULE_CMDSHELL].func)
-		cmdbuilders.list[MODULE_CMDSHELL].func(cli,1);
-	
-	if (NULL != cmdbuilders.list[MODULE_INTERN]. func)
-		cmdbuilders.list[MODULE_INTERN].func(cli,1);
+__mem_free:
+    for (i = 0; i < CMDMGMT_CLI_LIST_MAX; i++)
+	{
+        if (NULL != cli[i])
+            free(cli[i]);
+    }
+
+    if (NULL != cli)
+        free(cli);
 
 	return RET_ERR_NONE;
 }

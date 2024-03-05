@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
+
 #include <string.h>
 #include "lib.h"
 #include "lib_cli.h"
@@ -96,7 +95,7 @@ ret_val_t cmdshell_input_start()
 				// Solution 1
 				/*if (CMDSHELL_CHAR_SPACE != *(p_c - 1))
 				{
-					if (0 >= p - cur_token_len)
+					if (0 >= cur_token_len)
 					{
 						tokenidx--;
 						p = token[tokenidx] + strlen(token[tokenidx]);
@@ -145,10 +144,10 @@ PRINT_PROMPT:
 				else
 					tokencnt = tokenidx;
 				
-				if (RET_ERR_EXIT == (ret = cmdmgmt_cli_execute(tokencnt, token)))
-					return ret;
+				if (0 == strcasecmp(command, "exit"))
+					return RET_ERR_EXIT;
 
-				if (RET_ERR_NONE != ret)
+				if (RET_ERR_NONE != (ret = cmdmgmt_cli_execute(tokencnt, token)))
 					cmdshell_cli_error_display(ret);
 
 				break;

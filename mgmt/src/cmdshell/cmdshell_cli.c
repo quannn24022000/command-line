@@ -208,13 +208,19 @@ ret_val_t cmdshell_cli_show_running_define()
     return cmdmgmt_cli_register(token, tokencnt, cmdshell_cli_show_running_cb, STATUS_TRUE, MODULE_CMDSHELL);
 }
 
-ret_val_t cmdshell_cli_builder(char **cli, int count)
+ret_val_t cmdshell_cli_builder(char **cli, int *count)
 {
 	char *hostname = NULL;
-	
+	char buf[CMDSHELL_MAX_TOKEN_LEN] = {0};
+
+	if (!cli || !*cli || !count)
+		return;
 	hostname = cfg_hostname_get();
-	if (strcmp(hostname, HOSTNAME)) {
-		printf("cmdshell set hostname %s\n", hostname);
+	if (strcmp(hostname, HOSTNAME)) 
+	{
+		snprintf(buf, sizeof(buf), "cmdshell set hostname %s", hostname);
+		strncpy(cli[(*count)++], buf, CMDSHELL_MAX_TOKEN_LEN-1);
+		printf("%s\n", buf);
 	}
 
 	return RET_ERR_NONE;

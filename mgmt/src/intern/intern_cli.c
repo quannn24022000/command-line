@@ -83,9 +83,9 @@ ret_val_t intern_cli_del_cb(int argc, char (*argv)[CMDSHELL_MAX_TOKEN_LEN])
 
 ret_val_t intern_cli_del_define()
 {
-    int tokencnt = 2;
+    int tokencnt = 4;
 
-    struct token token[2] = {
+    struct token token[4] = {
         {
             "intern",
             "Key word specific to interact with intern",
@@ -96,6 +96,12 @@ ret_val_t intern_cli_del_define()
             "delete interns action",
             TOKEN_KEY
         },
+		{
+			"id",
+			"keyword present for id",
+			TOKEN_KEY
+
+		},
 		{
 			"",
 			"id of intern that we want to delete",
@@ -151,9 +157,9 @@ ret_val_t intern_cli_update_define()
     return cmdmgmt_cli_register(token, tokencnt, intern_cli_update_cb, STATUS_TRUE, MODULE_INTERN);
 }
 
-ret_val_t intern_cli_builder(char **cli, int count)
+ret_val_t intern_cli_builder(char **cli, int *count)
 {
-	return intern_database_builder();
+	return intern_database_builder(cli, count);
 }
 
 ret_val_t intern_cli_init(void)
